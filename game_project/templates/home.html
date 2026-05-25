@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Добро пожаловать{% endblock %}
+
+{% block content %}
+<div style="text-align: center;">
+    <h1>🎮 Добро пожаловать в игровую платформу!</h1>
+    <p style="margin: 20px 0;">Соревнуйтесь с друзьями, зарабатывайте достижения и поднимайтесь в рейтинге!</p>
+    {% if not user.is_authenticated %}
+        <a href="{% url 'register' %}" class="btn">Начать играть</a>
+    {% else %}
+        <a href="{% url 'games_list' %}" class="btn">Играть сейчас</a>
+    {% endif %}
+</div>
+{% endblock %}

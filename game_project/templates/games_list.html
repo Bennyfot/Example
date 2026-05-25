@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Игры{% endblock %}
+
+{% block content %}
+<h2>🎮 Доступные игры</h2>
+
+<form method="get" style="margin-bottom: 20px;">
+    <input type="text" name="name" placeholder="Поиск по названию" value="{{ name_filter }}">
+    <button type="submit">Найти</button>
+</form>
+
+<div class="games-grid">
+    {% for game in games %}
+    <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 10px;">
+        <h3>{{ game.name }}</h3>
+        <p>{{ game.description }}</p>
+        <p>Максимальный балл: {{ game.max_score }}</p>
+        <a href="{% url 'submit_score' game.id %}" class="btn">Играть</a>
+    </div>
+    {% empty %}
+    <p>Игры не найдены</p>
+    {% endfor %}
+</div>
+{% endblock %}

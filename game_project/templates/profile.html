@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Профиль{% endblock %}
+
+{% block content %}
+<h2>Профиль игрока</h2>
+
+{% if user.is_staff %}
+<div style="background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%); color: white; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+    <h3 style="color: white;">🔧 Администратор</h3>
+    <p>У вас есть доступ к админ-панели для управления играми, пользователями и достижениями.</p>
+    <a href="/admin/" target="_blank" style="background: white; color: #c92a2a; padding: 8px 15px; border-radius: 5px; text-decoration: none; display: inline-block; margin-top: 10px;">
+        🔧 Перейти в админ-панель
+    </a>
+</div>
+{% endif %}
+
+<div style="background: #f0f0f0; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+    <p><strong>👤 Имя пользователя:</strong> {{ user.username }}</p>
+    <p><strong>📧 Email:</strong> {{ user.email|default:"Не указан" }}</p>
+    <p><strong>⭐ Рейтинг:</strong> {{ user.rating }}</p>
+    <p><strong>🎮 Сыграно игр:</strong> {{ user.games_played }}</p>
+    <p><strong>🏆 Место в рейтинге:</strong> {{ position|default:"Не определено" }}</p>
+</div>
+
+<h3>📊 История игр</h3>
+{% if records %}
+<table style="width: 100%; border-collapse: collapse;">
+    <thead>
+        <tr>
+            <th style="border-bottom: 2px solid #ddd; padding: 10px; text-align: left;">Игра</th>
+            <th style="border-bottom: 2px solid #ddd; padding: 10px; text-align: left;">Счет</th>
+            <th style="border-bottom: 2px solid #ddd; padding: 10px; text-align: left;">Дата</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in records %}
+        <tr>
+            <td style="border-bottom: 1px solid #ddd; padding: 10px;">{{ record.game.name }}</td>
+            <td style="border-bottom: 1px solid #ddd; padding: 10px;">{{ record.score }}</td>
+            <td style="border-bottom: 1px solid #ddd; padding: 10px;">{{ record.played_at|date:"d.m.Y H:i" }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p style="color: #999;">Вы еще не играли ни в одну игру. <a href="{% url 'games_list' %}">Начать играть!</a></p>
+{% endif %}
+
+<h3 style="margin-top: 20px;">🏅 Полученные достижения</h3>
+{% if achievements %}
+<ul>
+    {% for item in achievements %}
+    <li>🏆 {{ item.achievement.name }} ({{ item.achievement.game.name }}) - получено {{ item.earned_at|date:"d.m.Y" }}</li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>Пока нет достижений. Играйте и получайте награды!</p>
+{% endif %}
+{% endblock %}

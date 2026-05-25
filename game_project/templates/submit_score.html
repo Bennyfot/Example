@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Играть в {{ game.name }}{% endblock %}
+
+{% block content %}
+<h2>🎮 {{ game.name }}</h2>
+<p>{{ game.description }}</p>
+<p>Максимальный балл: {{ game.max_score }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    <label>Ваш счет:</label>
+    <input type="number" name="score" min="0" max="{{ game.max_score }}" required>
+    <button type="submit">Отправить результат</button>
+</form>
+{% endblock %}

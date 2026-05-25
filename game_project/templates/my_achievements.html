@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Мои достижения{% endblock %}
+
+{% block content %}
+<h2>🏅 Мои достижения</h2>
+
+<h3>Полученные:</h3>
+<ul>
+    {% for item in earned %}
+    <li>🏆 {{ item.achievement.name }} ({{ item.achievement.game.name }}) - получено {{ item.earned_at|date:"d.m.Y" }}</li>
+    {% empty %}
+    <li>Пока нет достижений</li>
+    {% endfor %}
+</ul>
+
+<h3>Доступные для получения:</h3>
+<ul>
+    {% for achievement in available %}
+    <li>🎯 {{ achievement.name }} ({{ achievement.game.name }}) - нужно {{ achievement.required_score }} очков</li>
+    {% empty %}
+    <li>Все достижения получены!</li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Админ-панель{% endblock %}
+
+{% block content %}
+<h2>🔧 Административная панель</h2>
+
+{% if user.is_staff %}
+<!-- Статистика -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; text-align: center;">
+        <h3 style="font-size: 36px; margin: 0;">{{ total_users }}</h3>
+        <p style="margin: 10px 0 0;">Пользователей</p>
+    </div>
+    <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 20px; border-radius: 10px; text-align: center;">
+        <h3 style="font-size: 36px; margin: 0;">{{ total_games }}</h3>
+        <p style="margin: 10px 0 0;">Игр</p>
+    </div>
+    <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 20px; border-radius: 10px; text-align: center;">
+        <h3 style="font-size: 36px; margin: 0;">{{ total_achievements }}</h3>
+        <p style="margin: 10px 0 0;">Достижений</p>
+    </div>
+    <div style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; padding: 20px; border-radius: 10px; text-align: center;">
+        <h3 style="font-size: 36px; margin: 0;">{{ total_records }}</h3>
+        <p style="margin: 10px 0 0;">Сыграно партий</p>
+    </div>
+</div>
+
+<!-- Быстрые действия -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px;">
+    <div style="border: 1px solid #ddd; padding: 20px; border-radius: 10px;">
+        <h3>👥 Управление пользователями</h3>
+        <p>Создание, редактирование и удаление пользователей</p>
+        <a href="/admin/users/customuser/" class="btn">Перейти →</a>
+    </div>
+    
+    <div style="border: 1px solid #ddd; padding: 20px; border-radius: 10px;">
+        <h3>🎮 Управление играми</h3>
+        <p>Добавление новых игр и редактирование существующих</p>
+        <a href="/admin/games/game/" class="btn">Перейти →</a>
+    </div>
+    
+    <div style="border: 1px solid #ddd; padding: 20px; border-radius: 10px;">
+        <h3>🏅 Управление достижениями</h3>
+        <p>Создание достижений для игр</p>
+        <a href="/admin/ratings/achievement/" class="btn">Перейти →</a>
+    </div>
+    
+    <div style="border: 1px solid #ddd; padding: 20px; border-radius: 10px;">
+        <h3>📊 Результаты игр</h3>
+        <p>Просмотр и редактирование результатов</p>
+        <a href="/admin/games/playergamerecord/" class="btn">Перейти →</a>
+    </div>
+</div>
+
+<!-- Топ игроков -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+    <div style="border: 1px solid #ddd; padding: 20px; border-radius: 10px;">
+        <h3>🏆 Топ-5 игроков по рейтингу</h3>
+        <table style="width: 100%; margin-top: 10px;">
+            <thead>
+                <tr><th>#</th><th>Игрок</th><th>Рейтинг</th><th>Игр</th></tr>
+            </thead>
+            <tbody>
+                {% for player in top_players %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ player.username }}</td>
+                    <td>{{ player.rating }}</td>
+                    <td>{{ player.games_played }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4">Нет данных</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div style="border: 1px solid #ddd; padding: 20px; border-radius: 10px;">
+        <h3>🎮 Популярные игры</h3>
+        <table style="width: 100%; margin-top: 10px;">
+            <thead>
+                <tr><th>#</th><th>Игра</th><th>Сыграно раз</th></tr>
+            </thead>
+            <tbody>
+                {% for game in popular_games %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ game.name }}</td>
+                    <td>{{ game.plays_count }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="3">Нет данных</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div style="margin-top: 30px; text-align: center;">
+    <a href="/admin/" class="btn" style="background: #c92a2a;">🔧 Полная админ-панель Django</a>
+</div>
+
+{% else %}
+<div style="text-align: center; padding: 50px;">
+    <h3>⛔ Доступ запрещен</h3>
+    <p>У вас нет прав администратора для доступа к этой странице.</p>
+    <a href="/" class="btn">Вернуться на главную</a>
+</div>
+{% endif %}
+{% endblock %}
