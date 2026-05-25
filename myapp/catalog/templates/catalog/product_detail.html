@@ -1,0 +1,100 @@
+{% extends 'catalog/base.html' %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        {% if product.image %}
+            <img src="{{ product.image.url }}" class="img-fluid rounded shadow" alt="{{ product.name }}">
+        {% else %}
+            <img src="https://via.placeholder.com/500x400?text=No+Image" class="img-fluid rounded" alt="No image">
+        {% endif %}
+    </div>
+    
+    <div class="col-md-6">
+        <h1>{{ product.name }}</h1>
+        <p class="text-muted">
+            <i class="fas fa-tag"></i> Категория: {{ product.category.name }}
+        </p>
+        
+        <div class="mb-3">
+            {% if product.discount > 0 %}
+                <h3 class="text-decoration-line-through text-muted">{{ product.price }} руб.</h3>
+                <h2 class="text-danger">{{ product.final_price }} руб.</h2>
+                <span class="badge bg-danger">Скидка {{ product.discount }}%</span>
+            {% else %}
+                <h2>{{ product.price }} руб.</h2>
+            {% endif %}
+        </div>
+        
+        <div class="mb-3">
+            <strong>Наличие:</strong>
+            {% if product.stock > 0 %}
+                <span class="text-success"><i class="fas fa-check-circle"></i> В наличии ({{ product.stock }} шт.)</span>
+            {% else %}
+                <span class="text-danger"><i class="fas fa-times-circle"></i> Нет в наличии</span>
+            {% endif %}
+        </div>
+        
+        <div class="mb-3">
+            <strong>Описание:</strong>
+            <p>{{ product.description|linebreaks }}</p>
+        </div>
+        
+        <div class="mb-3">
+            <strong>Добавлен:</strong> {{ product.created|date:"d.m.Y" }}
+        </div>
+        
+        <div class="d-flex gap-2">
+            {% if user.is_authenticated %}
+                <a href="{% url 'catalog:toggle_favorite' product.id %}" class="btn {% if is_favorite %}btn-danger{% else %}btn-outline-danger{% endif %}">
+                    <i class="fas fa-heart"></i> {% if is_favorite %}В избранном{% else %}В избранное{% endif %}
+                </a>
+            {% endif %}
+            
+            {% if product.stock > 0 %}
+                <a href="{% url 'catalog:add_to_cart' product.id %}" class="btn btn-success flex-grow-1">
+                    <i class="fas fa-shopping-cart"></i> Добавить в корзину
+                </a>
+            {% else %}
+                <button class="btn btn-secondary flex-grow-1" disabled>
+                    <i class="fas fa-times"></i> Нет в наличии
+                </button>
+            {% endif %}
+        </div>
+        
+        {% if user.is_staff %}
+            <hr>
+            <div class="mt-3">
+                <a href="/admin/catalog/product/{{ product.id }}/change/" class="btn btn-warning btn-sm">
+                    <i class="fas fa-edit"></i> Редактировать в админке
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Похожие товары -->
+{% if similar_products %}
+<div class="row mt-5">
+    <div class="col-12">
+        <h3>Похожие товары</h3>
+        <hr>
+    </div>
+    {% for similar in similar_products|slice:":4" %}
+    <div class="col-md-3 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h6 class="card-title">{{ similar.name }}</h6>
+                <p class="card-text">{{ similar.price }} руб.</p>
+                <a href="{% url 'catalog:product_detail' similar.slug %}" class="btn btn-sm btn-primary">
+                    Смотреть
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

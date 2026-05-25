@@ -1,0 +1,68 @@
+{% extends 'catalog/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">
+                    <i class="fas fa-{% if category %}edit{% else %}plus{% endif %}"></i>
+                    {{ title }}
+                </h3>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label">
+                            {{ field.label }}
+                            {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+                        </label>
+                        {{ field.errors }}
+                        {% if field.name == 'description' %}
+                            <textarea name="{{ field.name }}" 
+                                      class="form-control {% if field.errors %}is-invalid{% endif %}"
+                                      rows="4">{{ field.value|default:'' }}</textarea>
+                        {% else %}
+                            <input type="text" 
+                                   name="{{ field.name }}" 
+                                   class="form-control {% if field.errors %}is-invalid{% endif %}"
+                                   value="{{ field.value|default:'' }}">
+                        {% endif %}
+                        {% if field.help_text %}
+                            <small class="form-text text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'catalog:category_list' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Отмена
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Сохранить
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        {% if category %}
+        <div class="card mt-3">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-info-circle"></i> Информация</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>ID:</strong> {{ category.id }}</p>
+                <p><strong>Дата создания:</strong> {{ category.created_at|date:"d.m.Y H:i" }}</p>
+                <p><strong>Количество товаров:</strong> {{ category.products.count }}</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
