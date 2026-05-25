@@ -1,0 +1,21 @@
+{% extends 'music/base.html' %}
+{% block content %}
+<h2>Альбомы</h2>
+<form method="get">
+  {{ filter_form.as_p }}
+  <button type="submit">Фильтровать</button>
+  <a href="{% url 'album_list' %}">Сбросить</a>
+</form>
+<table>
+  <tr><th>Название</th><th>Исполнитель</th><th>Год</th></tr>
+{% for a in albums %}
+  <tr>
+    <td><a href="{% url 'album_detail' a.id %}">{{ a.title }}</a></td>
+    <td>{{ a.artist.name }}</td>
+    <td>{{ a.release_year }}</td>
+  </tr>
+{% empty %}
+  <tr><td colspan="3">Нет альбомов</td></tr>
+{% endfor %}
+</table>
+{% endblock %}

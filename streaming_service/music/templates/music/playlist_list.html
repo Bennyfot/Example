@@ -1,0 +1,15 @@
+{% extends 'music/base.html' %}
+{% block content %}
+<h2>Мои плейлисты</h2>
+<a href="{% url 'playlist_create' %}"><button>Создать плейлист</button></a>
+<ul>
+{% for p in playlists %}
+  <li>
+    <a href="{% url 'playlist_detail' p.id %}">{{ p.name }}</a>
+    ({{ p.tracks.count }} треков)
+  </li>
+{% empty %}
+  <li>У вас нет плейлистов</li>
+{% endfor %}
+</ul>
+{% endblock %}

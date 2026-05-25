@@ -1,0 +1,20 @@
+{% extends 'music/base.html' %}
+{% block content %}
+<h2>{{ playlist.name }}</h2>
+<p>Владелец: {{ playlist.owner.username }}</p>
+{% if is_owner %}
+  <a href="{% url 'playlist_edit' playlist.id %}"><button>Редактировать</button></a>
+  <form method="post" action="{% url 'playlist_delete' playlist.id %}" style="display:inline">
+    {% csrf_token %}
+    <button type="submit" onclick="return confirm('Удалить?')">Удалить</button>
+  </form>
+{% endif %}
+<h3>Треки</h3>
+<ol>
+{% for t in playlist.tracks.all %}
+  <li>{{ t.title }} ({{ t.album.title }})</li>
+{% empty %}
+  <li>Плейлист пуст</li>
+{% endfor %}
+</ol>
+{% endblock %}

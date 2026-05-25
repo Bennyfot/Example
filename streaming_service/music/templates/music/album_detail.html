@@ -1,0 +1,18 @@
+{% extends 'music/base.html' %}
+{% block content %}
+{% if album %}
+  <h2>{{ album.title }}</h2>
+  <p>Исполнитель: <a href="{% url 'artist_detail' album.artist.id %}">{{ album.artist.name }}</a></p>
+  <p>Год: {{ album.release_year }}</p>
+  <h3>Треки</h3>
+  <ol>
+  {% for t in tracks %}
+    <li>{{ t.title }} — {{ t.duration_seconds }} сек.</li>
+  {% empty %}
+    <li>Нет треков</li>
+  {% endfor %}
+  </ol>
+{% else %}
+  <p>Альбом не найден</p>
+{% endif %}
+{% endblock %}
